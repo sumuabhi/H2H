@@ -140,7 +140,8 @@
         <button class="small-btn" onclick="toggleBgMusic()">🎵 Play / Pause Theme</button>
         <label class="small-btn" style="cursor:pointer;">
           📂 Pick Song (.mp3)
-          <input type="file" accept="audio/*" style="display:none;" onchange="loadLocalSong(event)" />
+         <audio id="bg-audio" src="./lovequest_bg.mp3" preload="auto" loop></audio>
+
         </label>
       </div>
 
