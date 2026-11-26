@@ -543,9 +543,13 @@ def main(page: ft.Page):
     )
 
     # --- TAB 3: LOVEQUEST TREASURE HUNT ---
-    treasure_view, on_enter_quest, on_leave_quest = build_quest_view(
-        page, state, push_cloud_state, lambda: current_user
-    )
+     quest_result = build_quest_view(page, state, push_cloud_state, lambda: current_user)
+    if quest_result is not None:
+        treasure_view, on_enter_quest, on_leave_quest = quest_result
+    else:
+        treasure_view = ft.Text("Check return indentation in quest_view.py")
+        on_enter_quest = lambda: None
+        on_leave_quest = lambda: None
 
     body_container = ft.Container(content=checkin_view, padding=6)
 
