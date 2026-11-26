@@ -136,9 +136,14 @@
         <div class="avatar"><div class="head" style="background:#d0ebff;"><span class="specs">o-o</span></div>💿 Puwali</div>
       </div>
       <button class="btn-primary" onclick="startRound()">▶ Start Today's Round ✧</button>
-      <div style="margin-top:10px;">
-        <button class="small-btn" onclick="toggleBgMusic()">🎵 Play / Pause Theme Music</button>
+         <div style="margin-top:10px; display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
+        <button class="small-btn" onclick="toggleBgMusic()">🎵 Play / Pause Theme</button>
+        <label class="small-btn" style="cursor:pointer;">
+          📂 Pick Song (.mp3)
+          <input type="file" accept="audio/*" style="display:none;" onchange="loadLocalSong(event)" />
+        </label>
       </div>
+
       <div id="music-status" style="font-size:11px; color:var(--sub); margin-top:4px;"></div>
     </div>
 
@@ -431,11 +436,29 @@
     }
   }
 
-  function toggleBgMusic() {
+    function toggleBgMusic() {
     const audio = document.getElementById("bg-audio");
-    if (audio.paused) { audio.play(); document.getElementById("music-status").innerText = "🎵 Playing LoveQuest theme!"; }
-    else { audio.pause(); document.getElementById("music-status").innerText = "🔇 Theme paused"; }
+    const status = document.getElementById("music-status");
+    if (audio.paused) {
+      audio.play()
+        .then(() => { status.innerText = "🎵 Playing LoveQuest theme!"; })
+        .catch(() => { status.innerText = "⚠️ Tap '📂 Pick Song (.mp3)' above to choose your audio file!"; });
+    } else {
+      audio.pause();
+      status.innerText = "🔇 Theme paused";
+    }
   }
+
+  function loadLocalSong(event) {
+    const file = event.target.files;
+    if (!file) return;
+    const audio = document.getElementById("bg-audio");
+    audio.src = URL.createObjectURL(file);
+    audio.play()
+      .then(() => { document.getElementById("music-status").innerText = "🎵 Playing: " + file.name; })
+      .catch(() => {});
+  }
+
 
   function startRound() {
     document.getElementById("bg-audio").pause();
@@ -535,9 +558,9 @@
     window.open(url, "_blank");
   }
 
-  function joinCall() {
+   function joinCall() {
     const safeDate = todayStr().replace(/-/g, "");
-    window.open(`https://jit.si{safeDate}`, "_blank");
+    window.location.href = `https://talky.io{safeDate}`;
   }
 
   syncCloud();
