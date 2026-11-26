@@ -1,13 +1,10 @@
-import flet as ft  # pyright: ignore[reportMissingImports]
+import flet as ft
+import flet_audio as fta
 import random
 import asyncio
 import webbrowser
-import os
-import sys
-if sys.platform == "win32":
-    import ctypes
-
 from datetime import date, datetime
+
 
 
 # Y2K Palette matching main.py
@@ -148,40 +145,30 @@ def build_quest_view(page: ft.Page, state: dict, push_cloud_state, get_current_u
         push_cloud_state(state)
 
     # --- BACKGROUND MUSIC CONTROLLER ---
+       # --- BROWSER / MOBILE AUDIO PLAYER ---
     music_status = ft.Text("", size=11, color=Y2K_SUBTEXT)
 
-    def mci_send(cmd):
-        if sys.platform == "win32":
-            ctypes.windll.winmm.mciSendStringW(cmd, None, 0, None)
-
-
+    bg_audio = fta.Audio(
+        src="lovequest_bg.mp3",
+        autoplay=False,
+        volume=0.8,
+        release_mode=fta.ReleaseMode.LOOP,
+    )
+    page.overlay.append(bg_audio)
 
     def start_bg_music():
-        path = quest_data.get("bg_music_path", DEFAULT_BG_MUSIC)
-        if path and os.path.exists(path):
-            abs_path = os.path.abspath(path)
-            mci_send("close lovequest_bgm")
-            mci_send(f'open "{abs_path}" type mpegvideo alias lovequest_bgm')
-            mci_send("play lovequest_bgm repeat")
-            music_status.value = f"🎵 Playing LoveQuest theme: {os.path.basename(path)}"
-        else:
-            music_status.value = "🎵 Pick an .mp3 file below for LoveQuest theme music"
+        try:
+            bg_audio.play()
+            music_status.value = "🎵 Playing LoveQuest theme!"
+        except Exception:
+            music_status.value = "🎵 Tap 'Play Theme' below to start audio"
 
     def stop_bg_music():
-        mci_send("stop lovequest_bgm")
-        mci_send("close lovequest_bgm")
+        try:
+            bg_audio.pause()
+        except Exception:
+            pass
         music_status.value = "🔇 Theme paused for round (pick Spotify or play quiet)"
-
-    music_picker = ft.FilePicker()
-
-    async def pick_theme_song(e):
-        files = await music_picker.pick_files(allowed_extensions=["mp3", "wav"])
-        if files and len(files) > 0:
-            chosen_path = files.path
-            quest_data["bg_music_path"] = chosen_path
-            push_cloud_state(state)
-            start_bg_music()
-            page.update()
 
     # --- PARTNER QUEST PING BANNER ---
     ping_banner_text = ft.Text("", size=12, weight=ft.FontWeight.BOLD, color=Y2K_INK, expand=True)
@@ -543,10 +530,11 @@ def build_quest_view(page: ft.Page, state: dict, push_cloud_state, get_current_u
                     width=260,
                     on_click=begin_round,
                 ),
-                ft.TextButton(
-                    "🎵 Choose Opening Theme Song (.mp3)",
-                    on_click=lambda e: music_picker.pick_files(allowed_extensions=["mp3"]),
+                            ft.TextButton(
+                    "🎵 Play / Resume Opening Theme Song",
+                    on_click=lambda e: (start_bg_music(), page.update()),
                 ),
+
                 music_status,
             ],
             spacing=12,
