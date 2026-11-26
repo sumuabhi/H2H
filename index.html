@@ -151,7 +151,8 @@
     <div id="quest-play" class="hidden">
       <div class="card" style="padding:8px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <button class="btn-lilac" onclick="joinCall()">📞 Voice / Video Call</button>
+         <a href="https://talky.io" target="_blank" rel="noopener" class="btn-lilac" style="text-decoration:none; display:inline-block;">📞 Voice / Video Call</a>
+
           <strong id="stopwatch">⏱️ 00:00</strong>
         </div>
         <div style="display:flex; gap:6px;">
@@ -450,14 +451,16 @@
   }
 
   function loadLocalSong(event) {
-    const file = event.target.files;
+    const file = event.target.files[0];
     if (!file) return;
     const audio = document.getElementById("bg-audio");
     audio.src = URL.createObjectURL(file);
+    audio.load();
     audio.play()
       .then(() => { document.getElementById("music-status").innerText = "🎵 Playing: " + file.name; })
-      .catch(() => {});
+      .catch((err) => { document.getElementById("music-status").innerText = "⚠️ Tap 'Play / Pause Theme' to start!"; });
   }
+
 
 
   function startRound() {
