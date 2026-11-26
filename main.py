@@ -579,18 +579,18 @@ def main(page: ft.Page):
         ),
         body_container,
     )
-      page.navigation_bar = ft.NavigationBar(
-        bgcolor=Y2K_CARD,
-        indicator_color=Y2K_PINK_SOFT,
-        on_change=on_tab_change,
-        destinations=[
-            ft.NavigationBarDestination(icon=ft.Icons.FAVORITE, label="Check-In"),
-            ft.NavigationBarDestination(icon=ft.Icons.CHAT_BUBBLE, label="Reassurance"),
-            ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Quest"),
-        ],
-    )
-
-
-import os
-port = int(os.environ.get("PORT", 8000))
-ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=port, assets_dir="assets")
+          page.navigation_bar = ft.NavigationBar(
+            bgcolor=Y2K_CARD,
+            indicator_color=Y2K_PINK_SOFT,
+            on_change=on_tab_change,
+            destinations=[
+                ft.NavigationBarDestination(icon=ft.Icons.FAVORITE, label="Check-In"),
+                ft.NavigationBarDestination(icon=ft.Icons.CHAT_BUBBLE, label="Reassurance"),
+                ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Quest"),
+            ],
+        )
+    
+    
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=port, assets_dir="assets")
