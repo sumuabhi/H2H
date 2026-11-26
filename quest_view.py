@@ -1,9 +1,9 @@
 import flet as ft
-import flet_audio as fta
 import random
 import asyncio
 import webbrowser
 from datetime import date, datetime
+
 
 
 
@@ -146,29 +146,16 @@ def build_quest_view(page: ft.Page, state: dict, push_cloud_state, get_current_u
 
     # --- BACKGROUND MUSIC CONTROLLER ---
        # --- BROWSER / MOBILE AUDIO PLAYER ---
-    music_status = ft.Text("", size=11, color=Y2K_SUBTEXT)
+  # --- BROWSER / MOBILE AUDIO PLAYER (NO EXTERNAL PLUGIN NEEDED) ---
+music_status = ft.Text("🎵 Tap below to play LoveQuest theme", size=11, color=Y2K_SUBTEXT)
 
-    bg_audio = fta.Audio(
-        src="lovequest_bg.mp3",
-        autoplay=False,
-        volume=0.8,
-        release_mode=fta.ReleaseMode.LOOP,
-    )
-    page.overlay.append(bg_audio)
+def start_bg_music():
+    page.launch_url("/lovequest_bg.mp3")
+    music_status.value = "🎵 LoveQuest theme launched!"
 
-    def start_bg_music():
-        try:
-            bg_audio.play()
-            music_status.value = "🎵 Playing LoveQuest theme!"
-        except Exception:
-            music_status.value = "🎵 Tap 'Play Theme' below to start audio"
+def stop_bg_music():
+    music_status.value = "🔇 Theme paused for round (pick Spotify or play quiet)"
 
-    def stop_bg_music():
-        try:
-            bg_audio.pause()
-        except Exception:
-            pass
-        music_status.value = "🔇 Theme paused for round (pick Spotify or play quiet)"
 
     # --- PARTNER QUEST PING BANNER ---
     ping_banner_text = ft.Text("", size=12, weight=ft.FontWeight.BOLD, color=Y2K_INK, expand=True)
