@@ -585,4 +585,7 @@ def main(page: ft.Page):
             ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Quest"),
         ],
 )
-ft.run(main, view=ft.AppView.WEB_BROWSER, port=8000)
+import os
+port = int(os.environ.get("PORT", 8000))
+ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=port)
+
