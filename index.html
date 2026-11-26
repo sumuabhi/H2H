@@ -421,22 +421,28 @@
     inp.value = ""; await pushCloud(); renderAll();
   }
     // --- LOVEQUEST LOGIC ---
-  function switchTab(tab) {
-    ["checkin", "reassurance", "quest"].forEach(t => {
-      document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab);
-      document.getElementById("nav-" + t).classList.toggle("active", t === tab);
-    });
-    const audio = document.getElementById("bg-audio");
-    if (tab === "quest") {
-      state.quest.active_ping = { sender: currentUser, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
-      pushCloud();
-      document.getElementById("quest-opening").classList.remove("hidden");
-      document.getElementById("quest-play").classList.add("hidden");
-      audio.play().then(() => document.getElementById("music-status").innerText = "🎵 Playing LoveQuest theme!").catch(() => {});
-    } else {
-      audio.pause(); clearInterval(timerInterval);
-    }
+function switchTab(tab) {
+  ["checkin", "reassurance", "quest"].forEach(t => {
+    document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab);
+    document.getElementById("nav-" + t).classList.toggle("active", t === tab);
+  });
+  const audio = document.getElementById("bg-audio");
+  const status = document.getElementById("music-status");
+  if (tab === "quest") {
+    state.quest.active_ping = { sender: currentUser, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) };
+    pushCloud();
+    document.getElementById("quest-opening").classList.remove("hidden");
+    document.getElementById("quest-play").classList.add("hidden");
+    audio.currentTime = 0;
+    audio.play()
+      .then(() => { status.innerText = "🎵 Playing LoveQuest theme!"; })
+      .catch(() => { status.innerText = "🎵 Tap 'Play / Pause Theme' to unmute"; });
+  } else {
+    audio.pause();
+    clearInterval(timerInterval);
   }
+}
+
 
     function toggleBgMusic() {
     const audio = document.getElementById("bg-audio");
