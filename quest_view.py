@@ -575,9 +575,9 @@ def stop_bg_music():
         page.update()
 
     # Triggered when leaving the Quest tab
-    def on_leave_quest():
-        stop_bg_music()
-        stop_timer()
-
-    return root_column, on_enter_quest, on_leave_quest
+        def on_leave_quest():
+            stop_bg_music()
+            stop_timer()
+    
+        return root_column, on_enter_quest, on_leave_quest
 
