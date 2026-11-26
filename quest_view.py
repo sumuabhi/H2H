@@ -560,6 +560,7 @@ def stop_bg_music():
     )
 
     # Triggered whenever Mekuri or Puwali switches to the Quest tab
+        # Triggered whenever Mekuri or Puwali switches to the Quest tab
     def on_enter_quest():
         sender = get_current_user()
         state.setdefault("quest", {})["active_ping"] = {
@@ -570,12 +571,13 @@ def stop_bg_music():
         refresh_ping_banner()
         opening_screen.visible = True
         gameplay_screen.visible = False
-        start_bg_music()
+        music_status.value = "🎵 Tap below to play LoveQuest theme"
         page.update()
 
-    # Triggered when leaving the Quest tab so music doesn't keep playing on Check-In
+    # Triggered when leaving the Quest tab
     def on_leave_quest():
         stop_bg_music()
         stop_timer()
 
     return root_column, on_enter_quest, on_leave_quest
+
